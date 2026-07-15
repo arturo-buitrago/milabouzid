@@ -1,0 +1,41 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Deploy on every push to main (this includes Mila's CMS edits, which commit to main).
+  push:
+    branches: [main]
+  # Allow manual runs from the Actions tab.
+  workflow_dispatch:
+
+# Permissions the official Astro → Pages workflow needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; don't cancel an in-progress deploy (avoids half-published state).
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Build with Astro
+        uses: withastro/action@v6
+        with:
+          node-version: 22 # Astro 7 requires Node >=22.12; matches .nvmrc
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
