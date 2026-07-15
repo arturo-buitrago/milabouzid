@@ -18,7 +18,8 @@ const hasHero = isFilled(heroImage);
 const taglineParts = tagline.split('·').map((p) => p.trim()).filter(Boolean);
 ---
 
-<header id="home" class="hero" style={hasHero ? `--hero-image:url(${heroImage})` : undefined}>
+<header id="home" class:list={['hero', { 'has-hero': hasHero }]}>
+  {hasHero && <div class="hero-portrait" style={`background-image:url(${heroImage})`} aria-hidden="true" />}
   <div class="hero-inner">
     <h1 class="wordmark"><span>MILA</span><span>BOUZID</span></h1>
 
@@ -48,18 +49,28 @@ const taglineParts = tagline.split('·').map((p) => p.trim()).filter(Boolean);
     flex-direction: column;
     justify-content: space-between;
     padding: 5rem 1.25rem 0;
-    background-color: var(--black);
-    background-image: var(--hero-image, none);
+    overflow: hidden;
+    /* green velvet curtain + warm lens-flare where the portrait sits (mockup) */
+    background-color: #0b1c10;
+    background-image:
+      radial-gradient(60% 45% at 72% 28%, rgba(255, 224, 150, 0.4), rgba(255, 200, 120, 0) 60%),
+      radial-gradient(120% 100% at 65% 20%, #1f4a27 0%, #12331b 38%, #0a1a0f 70%, #050d08 100%);
+  }
+  /* uploaded portrait sits above the glow backdrop */
+  .hero-portrait {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
     background-size: cover;
     background-position: center;
-    overflow: hidden;
   }
-  /* readability scrim over the portrait */
+  /* readability scrim */
   .hero::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.55) 100%);
+    z-index: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.55) 100%);
     pointer-events: none;
   }
   .hero-inner {
@@ -83,6 +94,7 @@ const taglineParts = tagline.split('·').map((p) => p.trim()).filter(Boolean);
     flex-direction: column;
     font-size: clamp(3.5rem, 18vw, 9rem);
     letter-spacing: 0.01em;
+    text-shadow: 0 0 28px rgba(237, 255, 6, 0.35);
   }
 
   .cta {

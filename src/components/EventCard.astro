@@ -11,13 +11,14 @@ interface Props {
   location?: string;
   moreInfoUrl?: string;
   soldOut?: boolean;
+  flat?: boolean; // drop own background when sitting inside a panel
 }
-const { title, date, venue, location, moreInfoUrl, soldOut = false } = Astro.props;
+const { title, date, venue, location, moreInfoUrl, soldOut = false, flat = false } = Astro.props;
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const dateISO = date.toISOString().slice(0, 10);
 ---
 
-<article class="card">
+<article class:list={['card', { flat }]}>
   <div class="head">
     <h3>{title}</h3>
     {soldOut && <span class="badge">Sold out</span>}
@@ -40,6 +41,15 @@ const dateISO = date.toISOString().slice(0, 10);
     border-radius: 16px;
     background: rgba(0, 0, 0, 0.35);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+  .card.flat {
+    background: transparent;
+    box-shadow: none;
+    padding: 0.5rem 0;
+  }
+  .card.flat + :global(.card.flat) {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
   }
   .head {
     display: flex;

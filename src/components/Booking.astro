@@ -28,11 +28,21 @@ const paragraphs = blurb.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 
 <style>
   .booking {
+    position: relative;
     display: grid;
     gap: 1.5rem;
     padding: 3rem 1.25rem;
-    background: var(--yellow-pure);
     color: var(--black);
+    overflow: hidden;
+    /* pure yellow with a soft green/white cloud glow in the corner (mockup) */
+    background-color: var(--yellow-pure);
+    background-image:
+      radial-gradient(45% 55% at 92% 100%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 70%),
+      radial-gradient(35% 45% at 80% 95%, rgba(180, 240, 120, 0.55), rgba(180, 240, 120, 0) 70%);
+  }
+  .booking > * {
+    position: relative;
+    z-index: 1;
   }
   .left {
     display: flex;

@@ -33,45 +33,44 @@ const sec = sections.data;
   <Hero tagline={s.tagline} heroImage={s.hero_image} social={s.social} />
 
   <!-- Listen -->
-  <section id="listen" class="section listen">
-    <h2 class="section-title">{sec.listen_heading}</h2>
-    <VideoCarousel videos={videos.map((v) => v.data)} />
-    <div class="section-cta">
-      <Button href={s.repertoire_pdf} variant="solid" disabled={!isFilled(s.repertoire_pdf)} download>
-        Download repertoire list
-      </Button>
+  <section id="listen" class="band listen">
+    <div class="inner">
+      <h2 class="section-title listen-title">{sec.listen_heading}</h2>
+      <VideoCarousel videos={videos.map((v) => v.data)} />
+      <div class="section-cta">
+        <Button href={s.repertoire_pdf} variant="solid" disabled={!isFilled(s.repertoire_pdf)} download>
+          Download repertoire list
+        </Button>
+      </div>
     </div>
   </section>
 
   <!-- Live events -->
-  <section id="events" class="section events">
-    <div class="events-head">
+  <section id="events" class="band events">
+    <div class="inner events-layout">
       <div class="events-head-text">
-        <h2 class="section-title">
-          <Flower size="0.9em" color="var(--yellow)" />
+        <h2 class="section-title events-title">
+          <Flower size="0.9em" color="var(--white)" />
           {sec.events_heading}
         </h2>
         {isFilled(sec.events_intro) && <p class="events-intro">{sec.events_intro}</p>}
+        <Button href={s.bandsintown_url} variant="solid" disabled={!isFilled(s.bandsintown_url)}>
+          Follow on Bandsintown
+        </Button>
       </div>
-      <Button
-        href={s.bandsintown_url}
-        variant="solid"
-        disabled={!isFilled(s.bandsintown_url)}
-      >
-        Follow on Bandsintown
-      </Button>
-    </div>
-    <div class="events-grid">
-      {events.map((e) => (
-        <EventCard
-          title={e.data.title}
-          date={e.data.date}
-          venue={e.data.venue}
-          location={e.data.location}
-          moreInfoUrl={e.data.more_info_url}
-          soldOut={e.data.sold_out}
-        />
-      ))}
+      <div class="events-panel">
+        {events.map((e) => (
+          <EventCard
+            title={e.data.title}
+            date={e.data.date}
+            venue={e.data.venue}
+            location={e.data.location}
+            moreInfoUrl={e.data.more_info_url}
+            soldOut={e.data.sold_out}
+            flat
+          />
+        ))}
+      </div>
     </div>
   </section>
 
@@ -85,11 +84,19 @@ const sec = sections.data;
 </BaseLayout>
 
 <style>
-  .section {
-    padding: 3rem 1.25rem;
+  /* full-bleed color band + constrained inner column */
+  .band {
+    position: relative;
+    overflow: hidden;
+  }
+  .band .inner {
+    position: relative;
+    z-index: 1;
     max-width: 1100px;
     margin: 0 auto;
+    padding: 3rem 1.25rem;
   }
+
   .section-title {
     display: flex;
     align-items: center;
@@ -105,38 +112,55 @@ const sec = sections.data;
     justify-content: center;
   }
 
-  .events-head {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
+  /* Listen — vivid lime→green radial glow (mockup) */
+  .listen {
+    background-color: #06210a;
+    background-image:
+      radial-gradient(45% 40% at 50% 48%, rgba(237, 255, 6, 0.55), rgba(237, 255, 6, 0) 60%),
+      radial-gradient(75% 70% at 50% 50%, #7ed321 0%, #2f8a1e 40%, #0c3d12 72%, #06210a 100%);
   }
-  .events-head-text .section-title {
-    margin-bottom: 0.5rem;
+  .listen-title {
+    color: var(--white);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Live events — warm-orange corner flare over a purple→blue field (mockup) */
+  .events {
+    background-color: #3a2170;
+    background-image:
+      radial-gradient(45% 45% at 6% 6%, rgba(255, 150, 60, 0.85), rgba(255, 120, 50, 0) 55%),
+      radial-gradient(60% 80% at 100% 60%, rgba(60, 90, 220, 0.7), rgba(60, 90, 220, 0) 60%),
+      linear-gradient(120deg, #7a2f6f 0%, #4b2a86 45%, #2b3a9c 100%);
+  }
+  .events-title {
+    color: var(--white);
   }
   .events-intro {
-    margin: 0;
+    margin: 0 0 1.25rem;
     color: var(--white);
-    opacity: 0.8;
+    opacity: 0.85;
     font-size: 1rem;
   }
-  .events-grid {
+  .events-layout {
     display: grid;
-    gap: 1rem;
+    gap: 1.5rem;
+  }
+  .events-panel {
+    padding: 1.5rem;
+    border-radius: 20px;
+    background: rgba(10, 8, 20, 0.72);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 20px 50px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
   }
 
   @media (min-width: 768px) {
-    .section {
+    .band .inner {
       padding: 5rem 1.25rem;
     }
-    .events-head {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .events-grid {
-      grid-template-columns: 1fr 1fr;
+    .events-layout {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      align-items: start;
+      gap: 2.5rem;
     }
   }
 </style>
