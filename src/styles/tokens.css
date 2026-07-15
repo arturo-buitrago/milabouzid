@@ -1,0 +1,42 @@
+/*
+ * Design tokens — single source of truth for color + type.
+ * Values extracted from the Canva mockup (see CLAUDE.md).
+ * Imported globally by the base layout, so every component can read these vars.
+ */
+
+:root {
+  /* ---- Color ---- */
+  --yellow: #f7f83e; /* primary brand */
+  --yellow-neon: #edff06; /* accent / glow */
+  --yellow-pure: #fffc00; /* buttons / highlights */
+  --black: #000000; /* base */
+  --black-warm: #1d1b0c; /* background tint */
+  --purple: #894685; /* events panel, gradient glows */
+  --pink: #f878cd; /* accent */
+  --white: #ffffff; /* text on dark */
+
+  /* ---- Type (PLACEHOLDERS) ----
+   * Real Canva fonts get swapped in later — keep this a two-line change.
+   * --font-display = the logo wordmark / serif look; --font-body = everything else. */
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif; /* {{FONT_DISPLAY}} */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif; /* {{FONT_BODY}} */
+}
+
+/* ---- Minimal base theme (neon-on-dark) ---- */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--black-warm);
+  color: var(--white);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
