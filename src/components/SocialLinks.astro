@@ -1,0 +1,70 @@
+---
+// Social icon row. Icons come from Simple Icons (brand glyphs) — NOT Mila's exported
+// social SVGs, per guardrail. Only links with a real URL render (blanks are skipped).
+import { siTiktok, siInstagram, siSnapchat, siYoutube, siThreads } from 'simple-icons';
+import { isFilled } from '../lib/content';
+
+interface Social {
+  tiktok?: string;
+  instagram?: string;
+  snapchat?: string;
+  youtube?: string;
+  threads?: string;
+}
+interface Props {
+  social: Social;
+  class?: string;
+}
+const { social, class: className } = Astro.props;
+
+const icons = [
+  { key: 'tiktok', icon: siTiktok, href: social.tiktok },
+  { key: 'instagram', icon: siInstagram, href: social.instagram },
+  { key: 'snapchat', icon: siSnapchat, href: social.snapchat },
+  { key: 'youtube', icon: siYoutube, href: social.youtube },
+  { key: 'threads', icon: siThreads, href: social.threads },
+].filter((s) => isFilled(s.href));
+---
+
+{
+  icons.length > 0 && (
+    <ul class:list={['socials', className]}>
+      {icons.map(({ key, icon, href }) => (
+        <li>
+          <a href={href} target="_blank" rel="noopener noreferrer" aria-label={icon.title}>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path fill="currentColor" d={icon.path} />
+            </svg>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .socials {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* 44px touch target */
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    color: var(--black);
+    background: var(--yellow-pure);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  .socials a:hover {
+    transform: translateY(-1px);
+    background: var(--yellow-neon);
+  }
+</style>

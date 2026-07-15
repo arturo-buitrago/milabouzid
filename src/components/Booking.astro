@@ -1,0 +1,84 @@
+---
+// Booking section. Content: heading, blurb, email. The email is a mailto: link — no form
+// backend (guardrail). Blurb may contain blank lines; render them as paragraphs.
+import Flower from './Flower.astro';
+
+interface Props {
+  heading: string;
+  blurb: string;
+  email: string;
+}
+const { heading, blurb, email } = Astro.props;
+const paragraphs = blurb.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+---
+
+<section id="booking" class="booking">
+  <div class="left">
+    <Flower size="2.5rem" color="var(--white)" />
+    <h2>{heading}</h2>
+  </div>
+
+  <div class="right">
+    {paragraphs.map((p) => <p class="blurb">{p}</p>)}
+    <p class="email">
+      <a href={`mailto:${email}`}>{email}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .booking {
+    display: grid;
+    gap: 1.5rem;
+    padding: 3rem 1.25rem;
+    background: var(--yellow-pure);
+    color: var(--black);
+  }
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .left :global(.flower) {
+    color: var(--white) !important;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.25));
+  }
+  h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 7vw, 3rem);
+    text-transform: uppercase;
+  }
+  .right {
+    max-width: 60ch;
+  }
+  .blurb {
+    margin: 0 0 1rem;
+    line-height: 1.6;
+  }
+  .blurb:first-child {
+    font-weight: 700;
+  }
+  .email a {
+    color: var(--black);
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    border-bottom: 2px solid var(--black);
+    padding-bottom: 2px;
+  }
+  .email a:hover {
+    color: var(--purple);
+    border-color: var(--purple);
+  }
+
+  @media (min-width: 768px) {
+    .booking {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 3rem;
+      padding: 5rem 2rem;
+      align-items: start;
+    }
+  }
+</style>

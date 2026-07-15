@@ -1,0 +1,122 @@
+---
+// YouTube carousel over the `videos` collection. Scroll-snap track = touch-swipeable on
+// mobile; arrows scroll by one slide on larger screens. iframes lazy-load, privacy domain.
+import { youTubeId } from '../lib/content';
+
+interface Video {
+  title: string;
+  youtube_url: string;
+}
+interface Props {
+  videos: Video[];
+}
+const { videos } = Astro.props;
+const slides = videos
+  .map((v) => ({ ...v, id: youTubeId(v.youtube_url) }))
+  .filter((v) => v.id);
+const multiple = slides.length > 1;
+---
+
+<div class="carousel" data-carousel>
+  {multiple && (
+    <button class="arrow prev" type="button" data-dir="-1" aria-label="Previous video">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7" /></svg>
+    </button>
+  )}
+
+  <ul class="track" data-track>
+    {slides.map((v) => (
+      <li class="slide">
+        <div class="frame">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${v.id}`}
+            title={v.title}
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  {multiple && (
+    <button class="arrow next" type="button" data-dir="1" aria-label="Next video">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+    </button>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll('[data-carousel]').forEach((root) => {
+    const track = root.querySelector('[data-track]') as HTMLElement | null;
+    if (!track) return;
+    root.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const dir = Number(btn.dataset.dir);
+        track.scrollBy({ left: dir * track.clientWidth, behavior: 'smooth' });
+      });
+    });
+  });
+</script>
+
+<style>
+  .carousel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-radius: 14px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+  .slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+  .frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+  }
+  .frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 14px;
+  }
+  .arrow {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--yellow-pure);
+    color: var(--black);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  .arrow:hover {
+    transform: translateY(-1px);
+    background: var(--yellow-neon);
+  }
+</style>

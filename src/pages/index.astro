@@ -1,106 +1,128 @@
 ---
-// Phase 1 content-check — proves every collection loads + renders from content, not literals.
-// This whole page is throwaway: Phase 2 replaces it with the real sections (Hero, Listen, …).
+// Single-page site. Every section reads from content collections (Phase 1), never literals.
+// This is Phase 2 structure + wiring + mobile-first layout; heavy glow/gradient polish is Phase 3.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import VideoCarousel from '../components/VideoCarousel.astro';
+import EventCard from '../components/EventCard.astro';
+import BioSection from '../components/BioSection.astro';
+import Booking from '../components/Booking.astro';
+import Button from '../components/Button.astro';
+import Flower from '../components/Flower.astro';
 import { getCollection, getEntry, render } from 'astro:content';
+import { isFilled } from '../lib/content';
 
-const settings = await getEntry('settings', 'settings');
+const settings = (await getEntry('settings', 'settings'))!;
 const events = (await getCollection('events')).sort(
   (a, b) => a.data.date.getTime() - b.data.date.getTime(),
 );
 const videos = (await getCollection('videos')).sort((a, b) => a.data.order - b.data.order);
-const bio = await getEntry('bio', 'bio');
-const { Content: BioContent } = await render(bio!);
-const booking = await getEntry('booking', 'booking');
+const bio = (await getEntry('bio', 'bio'))!;
+const { Content: BioContent } = await render(bio);
+const booking = (await getEntry('booking', 'booking'))!;
 
-const dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const s = settings.data;
 ---
 
 <BaseLayout>
-  <main class="check">
-    <p class="eyebrow">Content check · Phase 1</p>
+  <Nav />
 
-    <section>
-      <h2>settings</h2>
-      <p>tagline: <b>{settings!.data.tagline}</b></p>
-      <p>booking_email: <b>{settings!.data.booking_email}</b></p>
-      <p>bandsintown_url: <code>{settings!.data.bandsintown_url}</code></p>
-      <ul>
-        {Object.entries(settings!.data.social).map(([k, v]) => <li>{k}: <code>{v}</code></li>)}
-      </ul>
-    </section>
+  <Hero tagline={s.tagline} heroImage={s.hero_image} social={s.social} />
 
-    <section>
-      <h2>events ({events.length})</h2>
-      <ul>
-        {events.map((e) => (
-          <li>
-            <b>{e.data.title}</b> — {dateFmt.format(e.data.date)} — {e.data.venue}
-            {e.data.sold_out && <span class="badge">SOLD OUT</span>}
-          </li>
-        ))}
-      </ul>
-    </section>
+  <!-- Listen -->
+  <section id="listen" class="section listen">
+    <h2 class="section-title">Listen</h2>
+    <VideoCarousel videos={videos.map((v) => v.data)} />
+    <div class="section-cta">
+      <Button href={s.repertoire_pdf} variant="solid" disabled={!isFilled(s.repertoire_pdf)} download>
+        Download repertoire list
+      </Button>
+    </div>
+  </section>
 
-    <section>
-      <h2>videos ({videos.length})</h2>
-      <ul>
-        {videos.map((v) => <li>#{v.data.order} <b>{v.data.title}</b> — <code>{v.data.youtube_url}</code></li>)}
-      </ul>
-    </section>
+  <!-- Live events -->
+  <section id="events" class="section events">
+    <div class="events-head">
+      <h2 class="section-title">
+        <Flower size="0.9em" color="var(--yellow)" />
+        Upcoming events
+      </h2>
+      <Button
+        href={s.bandsintown_url}
+        variant="solid"
+        disabled={!isFilled(s.bandsintown_url)}
+      >
+        Follow on Bandsintown
+      </Button>
+    </div>
+    <div class="events-grid">
+      {events.map((e) => (
+        <EventCard
+          title={e.data.title}
+          date={e.data.date}
+          venue={e.data.venue}
+          location={e.data.location}
+          moreInfoUrl={e.data.more_info_url}
+          soldOut={e.data.sold_out}
+        />
+      ))}
+    </div>
+  </section>
 
-    <section>
-      <h2>bio</h2>
-      <div class="prose"><BioContent /></div>
-    </section>
+  <!-- Bio -->
+  <BioSection photo={bio.data.photo} presskitPdf={s.presskit_pdf}>
+    <BioContent slot="body" />
+  </BioSection>
 
-    <section>
-      <h2>booking</h2>
-      <p><b>{booking!.data.heading}</b></p>
-      <p>{booking!.data.blurb}</p>
-      <p>email: <b>{booking!.data.email}</b></p>
-    </section>
-  </main>
+  <!-- Booking -->
+  <Booking heading={booking.data.heading} blurb={booking.data.blurb} email={booking.data.email} />
 </BaseLayout>
 
 <style>
-  .check {
-    max-width: 60ch;
+  .section {
+    padding: 3rem 1.25rem;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-    font-family: var(--font-body);
   }
-  .eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--yellow-neon);
-  }
-  section {
-    margin-block: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-  }
-  h2 {
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--font-display);
     color: var(--yellow);
-    margin: 0 0 0.5rem;
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    margin: 0 0 1.5rem;
   }
-  code {
-    color: var(--pink);
-    word-break: break-all;
+  .section-cta {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
   }
-  .badge {
-    background: var(--pink);
-    color: var(--black);
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 0.1rem 0.4rem;
-    border-radius: 999px;
-    margin-left: 0.4rem;
+
+  .events-head {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
   }
-  .prose :global(p) {
-    opacity: 0.85;
-    line-height: 1.6;
+  .events-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .section {
+      padding: 5rem 1.25rem;
+    }
+    .events-head {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .events-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

@@ -1,0 +1,84 @@
+---
+// Pill-shaped button/link. Renders an <a> (href) unless `disabled`, then a non-interactive span.
+// Variants match the mockup: solid yellow, or outline. `disabled` is for not-yet-filled links
+// (e.g. a PDF that hasn't been uploaded) so structure is visible without a dead link.
+interface Props {
+  href?: string;
+  variant?: 'solid' | 'outline';
+  disabled?: boolean;
+  class?: string;
+  download?: boolean;
+  ariaLabel?: string;
+}
+const {
+  href,
+  variant = 'solid',
+  disabled = false,
+  class: className,
+  download = false,
+  ariaLabel,
+} = Astro.props;
+const isExternal = href?.startsWith('http');
+---
+
+{
+  disabled || !href ? (
+    <span class:list={['btn', variant, 'is-disabled', className]} aria-disabled="true" aria-label={ariaLabel}>
+      <slot />
+    </span>
+  ) : (
+    <a
+      class:list={['btn', variant, className]}
+      href={href}
+      aria-label={ariaLabel}
+      download={download ? true : undefined}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+    >
+      <slot />
+    </a>
+  )
+}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0.7em 1.6em;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+    /* comfortable touch target on mobile */
+    min-height: 44px;
+  }
+  .solid {
+    background: var(--yellow-pure);
+    color: var(--black);
+  }
+  .outline {
+    background: transparent;
+    color: var(--yellow-pure);
+    box-shadow: inset 0 0 0 2px var(--yellow-pure);
+  }
+  a.btn:hover {
+    transform: translateY(-1px);
+  }
+  a.solid:hover {
+    background: var(--yellow-neon);
+  }
+  a.outline:hover {
+    background: var(--yellow-pure);
+    color: var(--black);
+  }
+  .is-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+</style>

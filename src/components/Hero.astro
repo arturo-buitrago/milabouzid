@@ -1,0 +1,121 @@
+---
+// Hero: font-based wordmark, tagline strip, BOOKING + LISTEN CTAs, social row.
+// Portrait background comes from settings.hero_image once uploaded; until then a dark
+// placeholder stands in (real glow/portrait treatment is Phase 3).
+import Button from './Button.astro';
+import SocialLinks from './SocialLinks.astro';
+import Flower from './Flower.astro';
+import { isFilled } from '../lib/content';
+
+interface Props {
+  tagline: string;
+  heroImage?: string;
+  social: Record<string, string | undefined>;
+}
+const { tagline, heroImage, social } = Astro.props;
+const hasHero = isFilled(heroImage);
+// tagline strip: split "Singer · Voice Actress · Content Creator" into parts
+const taglineParts = tagline.split('·').map((p) => p.trim()).filter(Boolean);
+---
+
+<header id="home" class="hero" style={hasHero ? `--hero-image:url(${heroImage})` : undefined}>
+  <div class="hero-inner">
+    <h1 class="wordmark"><span>MILA</span><span>BOUZID</span></h1>
+
+    <div class="cta">
+      <Button href="#booking" variant="solid">BOOKING</Button>
+      <Button href="#listen" variant="outline">LISTEN</Button>
+    </div>
+
+    <SocialLinks social={social} class="hero-socials" />
+  </div>
+
+  <p class="tagline" aria-label={tagline}>
+    {taglineParts.map((part, i) => (
+      <>
+        {i > 0 && <Flower size="0.7em" color="var(--yellow-pure)" />}
+        <span>{part}</span>
+      </>
+    ))}
+  </p>
+</header>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5rem 1.25rem 0;
+    background-color: var(--black);
+    background-image: var(--hero-image, none);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+  }
+  /* readability scrim over the portrait */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 900;
+    color: var(--yellow);
+    line-height: 0.9;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(3.5rem, 18vw, 9rem);
+    letter-spacing: 0.01em;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .tagline {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 0.75rem;
+    background: var(--black);
+    color: var(--yellow-neon);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: clamp(0.7rem, 3vw, 1rem);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      padding-top: 6rem;
+    }
+    .hero-socials {
+      /* row of icons sits under CTAs on mobile; on desktop keep it inline-left */
+    }
+  }
+</style>
