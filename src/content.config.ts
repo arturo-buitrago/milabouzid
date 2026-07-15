@@ -79,4 +79,18 @@ const booking = defineCollection({
   }),
 });
 
-export const collections = { settings, events, videos, bio, booking };
+// sections (singleton) — editable section headings + intro copy so Mila can reword them.
+const sections = defineCollection({
+  loader: file('content/sections.json', {
+    parser: (text) => [{ id: 'sections', ...JSON.parse(text) }],
+  }),
+  schema: z.object({
+    id: z.string(),
+    listen_heading: z.string(),
+    events_heading: z.string(),
+    events_intro: z.string().optional(),
+    bio_heading: z.string(),
+  }),
+});
+
+export const collections = { settings, events, videos, bio, booking, sections };

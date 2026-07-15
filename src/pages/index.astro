@@ -21,8 +21,10 @@ const videos = (await getCollection('videos')).sort((a, b) => a.data.order - b.d
 const bio = (await getEntry('bio', 'bio'))!;
 const { Content: BioContent } = await render(bio);
 const booking = (await getEntry('booking', 'booking'))!;
+const sections = (await getEntry('sections', 'sections'))!;
 
 const s = settings.data;
+const sec = sections.data;
 ---
 
 <BaseLayout>
@@ -32,7 +34,7 @@ const s = settings.data;
 
   <!-- Listen -->
   <section id="listen" class="section listen">
-    <h2 class="section-title">Listen</h2>
+    <h2 class="section-title">{sec.listen_heading}</h2>
     <VideoCarousel videos={videos.map((v) => v.data)} />
     <div class="section-cta">
       <Button href={s.repertoire_pdf} variant="solid" disabled={!isFilled(s.repertoire_pdf)} download>
@@ -44,10 +46,13 @@ const s = settings.data;
   <!-- Live events -->
   <section id="events" class="section events">
     <div class="events-head">
-      <h2 class="section-title">
-        <Flower size="0.9em" color="var(--yellow)" />
-        Upcoming events
-      </h2>
+      <div class="events-head-text">
+        <h2 class="section-title">
+          <Flower size="0.9em" color="var(--yellow)" />
+          {sec.events_heading}
+        </h2>
+        {isFilled(sec.events_intro) && <p class="events-intro">{sec.events_intro}</p>}
+      </div>
       <Button
         href={s.bandsintown_url}
         variant="solid"
@@ -71,7 +76,7 @@ const s = settings.data;
   </section>
 
   <!-- Bio -->
-  <BioSection photo={bio.data.photo} presskitPdf={s.presskit_pdf}>
+  <BioSection heading={sec.bio_heading} photo={bio.data.photo} presskitPdf={s.presskit_pdf}>
     <BioContent slot="body" />
   </BioSection>
 
@@ -106,6 +111,15 @@ const s = settings.data;
     gap: 1rem;
     align-items: flex-start;
     margin-bottom: 1.5rem;
+  }
+  .events-head-text .section-title {
+    margin-bottom: 0.5rem;
+  }
+  .events-intro {
+    margin: 0;
+    color: var(--white);
+    opacity: 0.8;
+    font-size: 1rem;
   }
   .events-grid {
     display: grid;

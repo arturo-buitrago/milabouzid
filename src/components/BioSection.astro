@@ -6,10 +6,11 @@ import Flower from './Flower.astro';
 import { isFilled } from '../lib/content';
 
 interface Props {
+  heading: string;
   photo?: string;
   presskitPdf?: string;
 }
-const { photo, presskitPdf } = Astro.props;
+const { heading, photo, presskitPdf } = Astro.props;
 const hasPhoto = isFilled(photo);
 ---
 
@@ -21,7 +22,7 @@ const hasPhoto = isFilled(photo);
   <div class="body">
     <h2 class="heading">
       <Flower size="0.8em" color="var(--white)" />
-      Bio
+      {heading}
     </h2>
     <div class="prose"><slot name="body" /></div>
 
