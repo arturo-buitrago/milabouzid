@@ -9,7 +9,7 @@ backend:
   name: github
   repo: arturo-buitrago/milabouzid
   branch: main
-  base_url: '{{WORKER_URL}}' # URL of the sveltia-cms-auth OAuth worker
+  base_url: 'https://sveltia-cms-auth.arturo-buitrago.workers.dev' # URL of the sveltia-cms-auth OAuth worker (no trailing slash)
 
 # Where the CMS uploads images / PDFs. They live in public/uploads (served at /uploads)
 # and are referenced by the fields below as e.g. "/uploads/photo.jpg".
