@@ -1,0 +1,143 @@
+# Sveltia CMS configuration for the Mila Bouzid website.
+# Every field here maps 1:1 to a file in /content that the Astro site reads (typed in
+# src/content.config.ts). Editing here commits to GitHub; the site rebuilds automatically.
+#
+# NOTE (owner): login only works after the sveltia-cms-auth Worker + GitHub OAuth app are
+# wired (see CLAUDE.md). Replace {{WORKER_URL}} below with the deployed Worker URL.
+
+backend:
+  name: github
+  repo: arturo-buitrago/milabouzid
+  branch: main
+  base_url: '{{WORKER_URL}}' # URL of the sveltia-cms-auth OAuth worker
+
+# Where the CMS uploads images / PDFs. They live in public/uploads (served at /uploads)
+# and are referenced by the fields below as e.g. "/uploads/photo.jpg".
+media_folder: 'public/uploads'
+public_folder: '/uploads'
+
+site_url: 'https://milabouzid.com'
+display_url: 'https://milabouzid.com'
+
+# Friendlier labels for the commit messages Mila's edits generate.
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  # ---- Site settings (singleton) ----
+  - name: settings
+    label: Site settings
+    icon: settings
+    files:
+      - name: general
+        label: General
+        file: content/settings.json
+        description: Tagline, hero photo, social links, booking email, and downloads.
+        fields:
+          - { name: tagline, label: Tagline, widget: string, hint: 'Shown under the logo, e.g. Singer · Voice Actress · Content Creator' }
+          - { name: hero_image, label: Hero photo, widget: image, required: false, hint: 'Full-screen background portrait at the top of the page. Leave empty to keep the glow background.' }
+          - name: social
+            label: Social links
+            widget: object
+            hint: 'Paste the full URL to each profile. Leave a field empty to hide that icon.'
+            fields:
+              - { name: tiktok, label: TikTok, widget: string, required: false }
+              - { name: instagram, label: Instagram, widget: string, required: false }
+              - { name: snapchat, label: Snapchat, widget: string, required: false }
+              - { name: youtube, label: YouTube, widget: string, required: false }
+              - { name: threads, label: Threads, widget: string, required: false }
+          - { name: booking_email, label: Booking email, widget: string, hint: 'The address the Booking buttons open.' }
+          - { name: repertoire_pdf, label: Repertoire list (PDF), widget: file, required: false, hint: 'The “Download repertoire list” button. Upload a PDF.' }
+          - { name: presskit_pdf, label: Artist profile & presskit (PDF), widget: file, required: false, hint: 'The “Download artist profile & presskit” button.' }
+          - { name: bandsintown_url, label: Bandsintown URL, widget: string, required: false, hint: 'Your Bandsintown page. Leave empty to disable the Follow button.' }
+
+  # ---- Live events (folder) ----
+  - name: events
+    label: Live events
+    label_singular: Event
+    icon: event
+    folder: content/events
+    create: true
+    delete: true
+    format: yaml-frontmatter
+    extension: md
+    identifier_field: title
+    slug: '{{slug}}'
+    summary: '{{title}} — {{date}}'
+    sortable_fields: ['date', 'title']
+    fields:
+      - { name: title, label: Event name, widget: string, hint: 'e.g. Mzansi International Music Festival 2027' }
+      - name: date
+        label: Date
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        format: 'YYYY-MM-DD'
+        picker_utc: true
+        hint: 'Pick the show date.'
+      - { name: venue, label: Venue, widget: string, hint: 'e.g. Cedar Rock Convention Centre' }
+      - { name: location, label: City / location, widget: string, required: false, hint: 'Optional — shown after the venue.' }
+      - { name: more_info_url, label: More-info link, widget: string, required: false, hint: 'Optional link for the “More info” button. Leave empty to grey it out.' }
+      - { name: sold_out, label: Sold out?, widget: boolean, default: false, hint: 'Turn on to show a “Sold out” badge.' }
+
+  # ---- Videos / Listen (folder) ----
+  - name: videos
+    label: Videos
+    label_singular: Video
+    icon: video_library
+    folder: content/videos
+    create: true
+    delete: true
+    format: yaml-frontmatter
+    extension: md
+    identifier_field: title
+    slug: '{{slug}}'
+    summary: '#{{order}} — {{title}}'
+    sortable_fields: ['order', 'title']
+    fields:
+      - { name: title, label: Video title, widget: string, hint: 'A short label for the video.' }
+      - { name: youtube_url, label: YouTube link, widget: string, hint: 'Paste the full YouTube URL (watch, share, or embed link).' }
+      - { name: order, label: Display order, widget: number, value_type: int, default: 1, min: 1, hint: 'Lower numbers appear first in the carousel.' }
+
+  # ---- Bio (singleton, markdown) ----
+  - name: bio
+    label: Bio
+    icon: person
+    files:
+      - name: bio
+        label: Bio
+        file: content/bio.md
+        description: The bio text and portrait in the Bio section.
+        fields:
+          - { name: photo, label: Portrait photo, widget: image, required: false, hint: 'The photo beside the bio text.' }
+          - { name: body, label: Bio text, widget: markdown, hint: 'Your bio. Use paragraphs; basic formatting is supported.' }
+
+  # ---- Booking (singleton) ----
+  - name: booking
+    label: Booking
+    icon: mail
+    files:
+      - name: booking
+        label: Booking
+        file: content/booking.json
+        description: The booking section heading, blurb, and contact email.
+        fields:
+          - { name: heading, label: Heading, widget: string, hint: 'e.g. Booking inquiry' }
+          - { name: blurb, label: Blurb, widget: text, hint: 'Short paragraph(s). Leave a blank line between paragraphs.' }
+          - { name: email, label: Contact email, widget: string, hint: 'The email shown as a clickable link.' }
+
+  # ---- Section titles (singleton) ----
+  - name: sections
+    label: Section titles
+    icon: title
+    files:
+      - name: sections
+        label: Section titles
+        file: content/sections.json
+        description: The headings and intro line for the Listen, Live events, and Bio sections.
+        fields:
+          - { name: listen_heading, label: Listen heading, widget: string }
+          - { name: events_heading, label: Live events heading, widget: string }
+          - { name: events_intro, label: Live events intro line, widget: string, required: false, hint: 'Small line under the events heading. Leave empty to hide it.' }
+          - { name: bio_heading, label: Bio heading, widget: string }

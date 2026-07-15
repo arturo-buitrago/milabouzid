@@ -18,7 +18,6 @@ const settings = defineCollection({
   }),
   schema: z.object({
     id: z.string(),
-    logo: z.string().optional(), // logo is font-based; optional image override only
     hero_image: z.string().optional(),
     tagline: z.string(),
     social: z.object({
