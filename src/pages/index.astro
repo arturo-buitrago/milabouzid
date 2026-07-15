@@ -1,74 +1,106 @@
 ---
-// Phase 0 scaffold — a blank, themed page proving tokens + fonts are wired site-wide.
-// Real sections (Hero, Listen, Live events, Bio, Booking) arrive in Phase 2, bound to content.
+// Phase 1 content-check — proves every collection loads + renders from content, not literals.
+// This whole page is throwaway: Phase 2 replaces it with the real sections (Hero, Listen, …).
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+
+const settings = await getEntry('settings', 'settings');
+const events = (await getCollection('events')).sort(
+  (a, b) => a.data.date.getTime() - b.data.date.getTime(),
+);
+const videos = (await getCollection('videos')).sort((a, b) => a.data.order - b.data.order);
+const bio = await getEntry('bio', 'bio');
+const { Content: BioContent } = await render(bio!);
+const booking = await getEntry('booking', 'booking');
+
+const dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <BaseLayout>
-  <main class="scaffold">
-    <p class="eyebrow">Scaffold · Phase 0</p>
-    <h1 class="wordmark">MILA BOUZID</h1>
-    <p class="tagline">Singer · Voice Actress · Content Creator</p>
+  <main class="check">
+    <p class="eyebrow">Content check · Phase 1</p>
 
-    <!-- Swatches: visual proof the color tokens resolve everywhere. Removed in Phase 2. -->
-    <div class="swatches" aria-hidden="true">
-      <span style="background: var(--yellow)"></span>
-      <span style="background: var(--yellow-neon)"></span>
-      <span style="background: var(--yellow-pure)"></span>
-      <span style="background: var(--purple)"></span>
-      <span style="background: var(--pink)"></span>
-      <span style="background: var(--white)"></span>
-    </div>
+    <section>
+      <h2>settings</h2>
+      <p>tagline: <b>{settings!.data.tagline}</b></p>
+      <p>booking_email: <b>{settings!.data.booking_email}</b></p>
+      <p>bandsintown_url: <code>{settings!.data.bandsintown_url}</code></p>
+      <ul>
+        {Object.entries(settings!.data.social).map(([k, v]) => <li>{k}: <code>{v}</code></li>)}
+      </ul>
+    </section>
+
+    <section>
+      <h2>events ({events.length})</h2>
+      <ul>
+        {events.map((e) => (
+          <li>
+            <b>{e.data.title}</b> — {dateFmt.format(e.data.date)} — {e.data.venue}
+            {e.data.sold_out && <span class="badge">SOLD OUT</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section>
+      <h2>videos ({videos.length})</h2>
+      <ul>
+        {videos.map((v) => <li>#{v.data.order} <b>{v.data.title}</b> — <code>{v.data.youtube_url}</code></li>)}
+      </ul>
+    </section>
+
+    <section>
+      <h2>bio</h2>
+      <div class="prose"><BioContent /></div>
+    </section>
+
+    <section>
+      <h2>booking</h2>
+      <p><b>{booking!.data.heading}</b></p>
+      <p>{booking!.data.blurb}</p>
+      <p>email: <b>{booking!.data.email}</b></p>
+    </section>
   </main>
 </BaseLayout>
 
 <style>
-  .scaffold {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 2rem;
-    text-align: center;
+  .check {
+    max-width: 60ch;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    font-family: var(--font-body);
   }
-
   .eyebrow {
-    margin: 0;
     font-size: 0.75rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--yellow-neon);
   }
-
-  .wordmark {
-    margin: 0;
+  section {
+    margin-block: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  h2 {
     font-family: var(--font-display);
-    font-weight: 900;
-    font-size: clamp(2.5rem, 10vw, 6rem);
-    line-height: 1;
     color: var(--yellow);
-    letter-spacing: 0.02em;
+    margin: 0 0 0.5rem;
   }
-
-  .tagline {
-    margin: 0;
-    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-    color: var(--white);
-    opacity: 0.85;
+  code {
+    color: var(--pink);
+    word-break: break-all;
   }
-
-  .swatches {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-  }
-
-  .swatches span {
-    width: 2rem;
-    height: 2rem;
+  .badge {
+    background: var(--pink);
+    color: var(--black);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
     border-radius: 999px;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
+    margin-left: 0.4rem;
+  }
+  .prose :global(p) {
+    opacity: 0.85;
+    line-height: 1.6;
   }
 </style>

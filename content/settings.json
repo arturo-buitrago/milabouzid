@@ -1,0 +1,16 @@
+{
+  "tagline": "Singer · Voice Actress · Content Creator",
+  "logo": "",
+  "hero_image": "",
+  "social": {
+    "tiktok": "{{SOCIAL_TIKTOK}}",
+    "instagram": "{{SOCIAL_INSTAGRAM}}",
+    "snapchat": "{{SOCIAL_SNAPCHAT}}",
+    "youtube": "https://www.youtube.com/channel/UCPbEcJyVcETaWrubYOg4UTw",
+    "threads": "{{SOCIAL_THREADS}}"
+  },
+  "booking_email": "booking@milabouzid.com",
+  "repertoire_pdf": "",
+  "presskit_pdf": "",
+  "bandsintown_url": "{{BANDSINTOWN_URL}}"
+}
