@@ -1,8 +1,8 @@
 ---
-title: "Elevate Symphonic Rivermond 2027"
-date: 2027-04-15
-venue: "Rivermond Arena"
-location: ""
-more_info_url: ""
-sold_out: false
+title: Mila Bouzid Live Acoustic Set (With Add9 Duo)
+date: 2027-09-17
+venue: Kennedy's
+location: Munich
+more_info_url: Sendlinger-Tor-Platz 11, 80336 München-Altstadt-Lehel
+sold_out: true
 ---
