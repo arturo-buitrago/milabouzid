@@ -1,10 +1,10 @@
 {
   "tagline": "Singer · Voice Actress · Content Creator",
-  "hero_image": "",
+  "hero_image": "/uploads/IMG_5189.JPG",
   "social": {
-    "tiktok": "{{SOCIAL_TIKTOK}}",
-    "instagram": "{{SOCIAL_INSTAGRAM}}",
-    "snapchat": "{{SOCIAL_SNAPCHAT}}",
+    "tiktok": "https://www.tiktok.com/@milamusical",
+    "instagram": "https://www.instagram.com/milamusical/",
+    "snapchat": "",
     "youtube": "https://www.youtube.com/channel/UCPbEcJyVcETaWrubYOg4UTw",
     "threads": "{{SOCIAL_THREADS}}"
   },
