@@ -1,5 +1,5 @@
 ---
-title: "Live performance"
-youtube_url: "https://www.youtube.com/watch?v=5xVSUAo7bhU"
+title: Live performance
+youtube_url: https://www.youtube.com/watch?v=bUkJLkoh3kA
 order: 1
 ---
