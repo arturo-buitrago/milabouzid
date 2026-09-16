@@ -1,5 +1,5 @@
 ---
-photo: /uploads/copy_13923E30-0BD5-44F8-BFB5-3A39EE226D32.JPEG
+photo: /uploads/475897607_1171243697693248_1492254391572398459_n.jpg
 ---
 
 Hi! I'm Mila Bouzid, a singer born in Costa Rica and based in Munich, Germany, available for bookings and events all over the world.
