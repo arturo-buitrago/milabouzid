@@ -2,10 +2,10 @@
 photo: /uploads/copy_13923E30-0BD5-44F8-BFB5-3A39EE226D32.JPEG
 ---
 
-Costa Rican - Spanish singer Mila Bouzid's voice will get you right in your feels. 
+Hi! I'm Mila Bouzid, a singer born in Costa Rica and based in Munich, Germany, available for bookings and events all over the world.
 
-A new and exciting voice taking on European stages, Mila Bouzid is known for her warm, bright soprano tone, viral scale improvisations, and most recently, as a candidate on The Voice of Germany Season 16. With a repertoire spanning pop, soul, jazz, boleros, and bossa, she has established herself as a versatile live performer across private events, orchestral productions, television appearances and public shows.
+I would describe my instrument as having a warm, bright soprano tone, and what characterizes me as a vocalist is my powerful upper range and heartfelt delivery. As a collaborator I would say I'm reliable, authentic, flexible and adventurous.
 
-In Costa Rica, she performs regularly with the Philharmonic Orchestra, one of the region’s most prestigious ensembles. With an established track record as a live vocalist, she is now preparing her debut studio album, projected for release in 2027.
+My experience as a singer spans orchestral productions, private events, weddings, parties, and most recently, my appearance as a candidate on The Voice of Germany Season 16. I'm a versatile live performer and whether I'm playing intimate acoustic sets, fronting a party band, or energizing big crowds in the hundreds, I always bring my all to every second I'm on stage. My repertoire spans pop, rock, soul, party anthems, jazz, boleros, & bossa.
 
-Based in Germany, Mila Bouzid is available for private bookings worldwide.
+ཐི༏ཋྀ
