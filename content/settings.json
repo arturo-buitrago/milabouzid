@@ -3,13 +3,13 @@
   "hero_image": "/uploads/IMG_5189.JPG",
   "social": {
     "tiktok": "https://www.tiktok.com/@milamusical",
-    "instagram": "https://www.instagram.com/milamusical/",
+    "instagram": "https://www.instagram.com/milabouzid/",
     "snapchat": "",
     "youtube": "https://www.youtube.com/@milabouzidmusic",
     "threads": "{{SOCIAL_THREADS}}"
   },
   "booking_email": "booking@milabouzid.com",
   "repertoire_pdf": "/uploads/Mila Bouzid, Repertoire.xlsx",
-  "presskit_pdf": "/uploads/Live offering shows.pdf",
+  "presskit_pdf": "",
   "bandsintown_url": "https://www.bandsintown.com/a/15657837"
 }
